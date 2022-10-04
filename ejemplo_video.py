@@ -103,7 +103,6 @@ while True:
       np.expand_dims(frame_correcto, 0), dtype=tf.float32)
   detections, predictions_dict, shapes = detect_fn(input_tensor)
 
-  print(detections['detection_scores'][0].numpy())
 
   label_id_offset = 1
   image_np_with_detections = frame_correcto.copy()
@@ -123,7 +122,7 @@ while True:
 
   frame_mostrar = cv2.cvtColor(image_np_with_detections, cv2.COLOR_RGB2BGR)
 
-  if humo_detectado:
+  if any(valor > .5 for valor in detections['detection_scores'][0].numpy()):
     alerta(frame_mostrar, desplazamiento)
 
   cv2.imshow("Camara", frame_mostrar)
