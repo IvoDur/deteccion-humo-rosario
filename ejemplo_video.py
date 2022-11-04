@@ -29,6 +29,8 @@ desplazamiento = 0
 VELOCIDAD_DESPLAZAMIENTO = 1
 
 humo_detectado = False
+HOLGURA_FRAMES = 5
+frames_sin_deteccion = HOLGURA_FRAMES
 
 
 def alerta(frame,desplazamiento):
@@ -124,6 +126,10 @@ while True:
 
   if any(valor > .5 for valor in detections['detection_scores'][0].numpy()):
     alerta(frame_mostrar, desplazamiento)
+    frames_sin_deteccion = 0
+  elif frames_sin_deteccion < HOLGURA_FRAMES:
+    alerta(frame_mostrar, desplazamiento)
+    frames_sin_deteccion += 1
 
   cv2.imshow("Camara", frame_mostrar)
 
