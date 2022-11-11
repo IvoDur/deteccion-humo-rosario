@@ -43,19 +43,7 @@ class Database:
         self.cur.execute("SELECT * FROM fire_detections ORDER BY id DESC LIMIT 1")
         rows = self.cur.fetchall()
         return rows
-
-    def search(self, time="", frame="", year="", isbn=""):
-        self.cur.execute("SELECT * FROM book WHERE time=? OR frame=? OR year=? OR isbn=?", (time, frame, year, isbn))
-        rows = self.cur.fetchall()
-        return rows
-
-    def delete(self, id):
-        self.cur.execute("DELETE FROM book WHERE id=?", (id,))
-        self.conn.commit()
-
-    def update(self, id, time, frame, year, isbn):
-        self.cur.execute("UPDATE book SET time=?, frame=?, year=?, isbn=? WHERE id=?", (time, frame, year, isbn, id))
-        self.conn.commit()
+ 
 
     def __del__(self):
         self.conn.close()
