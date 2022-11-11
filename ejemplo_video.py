@@ -10,6 +10,7 @@ from object_detection.utils import visualization_utils as viz_utils
 from object_detection.builders import model_builder
 
 import os
+from database import Database
 
 cap = cv2.VideoCapture("humo.mp4")
 w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -63,6 +64,22 @@ ckpt = tf.compat.v2.train.Checkpoint(
       model=detection_model)
 ckpt.restore(os.path.join('model\\checkpoint\\ckpt-0'))
 
+def saveInDataBase():
+    """
+    we save the data in a database
+      time: time of the detection
+      frame: frame of the detection
+      coordinates: coordinates of the detection
+
+    """
+   # print("Guardando en base de datos")
+    # for dato in datos:
+    #query="insert into fire_detections values (%d,%d,%d,%d,%d,'%s')"%(dato[0],dato[1],dato[2],dato[3],dato[4],dato[5])
+    # print(query)
+    #cursor.execute(query)
+    #cnxn.commit()
+    # print("se agregaron ",len(datos),"registros")
+    pass 
 
 def get_model_detection_function(model):
   """Get a tf.function for detection."""
@@ -96,7 +113,7 @@ label_map_dict = label_map_util.get_label_map_dict(label_map, use_display_name=T
 
 
 while True:
-
+  database = Database("fire_detections.db")
   ref, frame = cap.read()
 
   frame_correcto = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -126,6 +143,7 @@ while True:
 
   if any(valor > .5 for valor in detections['detection_scores'][0].numpy()):
     alerta(frame_mostrar, desplazamiento)
+    database.insert(frame)
     frames_sin_deteccion = 0
   elif frames_sin_deteccion < HOLGURA_FRAMES:
     alerta(frame_mostrar, desplazamiento)
