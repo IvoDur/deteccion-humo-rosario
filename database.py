@@ -18,9 +18,12 @@ class Database:
         if last:
             # convirto str a datetime
             last_time = datetime.datetime.strptime(last[0][1], '%Y-%m-%d %H:%M:%S')
+            print( f"Pasaron {(datetime.datetime.now() - last_time).total_seconds()}")
             if (datetime.datetime.now() - last_time).total_seconds() < 60:
+                print("Todavia no")
                 return False
             else:
+                print("Puedo guardar")
                 return True
         else:
             return True
@@ -31,7 +34,11 @@ class Database:
             if time:
                 self.cur.execute("INSERT INTO fire_detections (time,frame) VALUES  (?, ?)", (time, frame))
             else:
-                self.cur.execute("INSERT INTO fire_detections (frame) VALUES  (?)", (frame,))
+                tiempo = datetime.datetime.now()
+                tiempo = f"{tiempo.year}-{tiempo.month}-{tiempo.day} {tiempo.hour}:{tiempo.minute}:{tiempo.second}"
+                print(tiempo)
+                self.cur.execute("INSERT INTO fire_detections (time,frame) VALUES  (?, ?)", (tiempo, frame))
+                # self.cur.execute("INSERT INTO fire_detections (frame) VALUES  (?)", (frame,))
             self.conn.commit()
 
     def view(self):
@@ -52,7 +59,7 @@ class Database:
 db = Database("fire_detections.db")
 for algo in db.view():
     # if algo[0] == 1:
-    print(algo[1])
+    print(f"{algo[0]}: T:{algo[1]}")
         # print(algo[2])
         # print(algo.id)
     # print(algo)
