@@ -51,7 +51,14 @@ while True:
 
   mask = cv2.inRange(frame_hsv, valor_minimo, valor_maximo)
   res = cv2.bitwise_and(frame, frame, mask=mask)
+  contornos, jerarquia = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+  if len(contornos) != 0:
+    humo_detectado = True
+    for contorno in contornos:
+      if cv2.contourArea(contorno) > 500:
+        x,y,width,height = cv2.boundingRect(contorno)
+        cv2.rectangle(frame, (x,y), (x + width, y+height), (0,0,255), 3)
 
   if humo_detectado:
     alerta(frame, desplazamiento)
@@ -61,7 +68,7 @@ while True:
     frames_sin_deteccion += 1
 
   cv2.imshow("Prueba", mask)
-  cv2.imshow("Resultado", res)
+  cv2.imshow("frame", frame)
 
 
 
