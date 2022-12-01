@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from database import Database
 
 cap = cv2.VideoCapture("video_noche.mp4")
 w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -42,7 +43,7 @@ def alerta(frame,desplazamiento):
     cv2.putText(frame, "ALERTA", (desplazamiento+SEPARACION_TEXTO, SEPARACION_EJEY_TEXTO), FUENTE, ESCALA_FUENTE, BLANCO, GROSOR_FUENTE)
 
 while True:
-
+  database = Database("fire_detections.db")
   ref, frame = cap.read()
   frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -59,6 +60,7 @@ while True:
       if cv2.contourArea(contorno) > 500:
         x,y,width,height = cv2.boundingRect(contorno)
         cv2.rectangle(frame, (x,y), (x + width, y+height), (0,0,255), 3)
+    database.insert(frame)
 
   if humo_detectado:
     alerta(frame, desplazamiento)
