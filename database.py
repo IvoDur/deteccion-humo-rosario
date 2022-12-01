@@ -20,10 +20,9 @@ class Database:
             last_time = datetime.datetime.strptime(last[0][1], '%Y-%m-%d %H:%M:%S')
             print( f"Pasaron {(datetime.datetime.now() - last_time).total_seconds()}")
             if (datetime.datetime.now() - last_time).total_seconds() < 60:
-                print("Todavia no")
                 return False
             else:
-                print("Puedo guardar")
+                print("Se almacenó en la base de datos")
                 return True
         else:
             return True
